@@ -8,12 +8,12 @@ class User
 public:
     string username;
     string password;
+     User(string u, string p) : username(u), password(p)
+     {
 
-    User(string username, string password)
-    {
-        username = username;
-        password = password;
-    }
+     }
+
+
 };
 
 #endif// USER_H

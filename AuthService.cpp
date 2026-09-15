@@ -29,6 +29,7 @@ void AuthService::registerUser()
     }
 
     users.push_back(User(username, password));
+    cout << "Users count: " << users.size() << endl;
 
     cout << "Registration successful!" << endl;
 }
@@ -39,12 +40,15 @@ bool AuthService::loginUser()
     string password;
 
     cout << "\n===== Login =====" << endl;
+    cout << "Users count: " << users.size() << endl;
 
     cout << "Enter username: ";
     cin >> username;
 
     cout << "Enter password: ";
     cin >> password;
+    cout << "Entered username: " << username << endl;
+cout << "Stored username: " << users[0].username << endl;
 
     for (User user : users)
     {
