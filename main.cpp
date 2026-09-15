@@ -54,7 +54,59 @@ void memberMenu(MemberService &memberService)
         }
     }
 }
+void fineMenu(FineService &fineService)
+{
+    int choice;
 
+    while (true)
+    {
+        cout << "\n===== Manage Fines =====" << endl;
+
+        cout << "1. Add Fine" << endl;
+        cout << "2. View Fines" << endl;
+        cout << "3. Search Fine" << endl;
+        cout << "4. Update Fine" << endl;
+        cout << "5. Delete Fine" << endl;
+        cout << "6. Pay Fine" << endl;
+        cout << "7. Back" << endl;
+
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        if (choice == 1)
+        {
+            fineService.addFine();
+        }
+        else if (choice == 2)
+        {
+            fineService.viewFines();
+        }
+        else if (choice == 3)
+        {
+            fineService.searchFine();
+        }
+        else if (choice == 4)
+        {
+            fineService.updateFine();
+        }
+        else if (choice == 5)
+        {
+            fineService.deleteFine();
+        }
+        else if (choice == 6)
+        {
+            fineService.payFine();
+        }
+        else if (choice == 7)
+        {
+            break;
+        }
+        else
+        {
+            cout << "Invalid choice!" << endl;
+        }
+    }
+}
 void mainMenu(BookService &bookService,
               MemberService &memberService,
               BorrowingService &borrowingService,
@@ -113,7 +165,7 @@ void mainMenu(BookService &bookService,
         }
         else if (choice == 9)
         {
-            fineService.viewFines();
+            fineMenu(fineService);
         }
         else if (choice == 10)
         {
