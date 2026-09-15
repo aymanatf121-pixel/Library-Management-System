@@ -1,4 +1,5 @@
 #include "include/BookService.h"
+#include "InputValidator.h"
 #include <iostream>
 #include <string>
 
@@ -16,21 +17,38 @@ void BookService::addBook()
     cout << "Enter Book ID: ";
     cin >> id;
 
+    if (!InputValidator::isPositiveNumber(id))
+    {
+        cout << "Book ID must be positive!" << endl;
+        return;
+    }
+
     cout << "Enter Book Title: ";
     cin >> title;
+
+    if (!InputValidator::isNotEmpty(title))
+    {
+        cout << "Book title cannot be empty!" << endl;
+        return;
+    }
 
     cout << "Enter Author Name: ";
     cin >> author;
 
+    if (!InputValidator::isNotEmpty(author))
+    {
+        cout << "Author name cannot be empty!" << endl;
+        return;
+    }
+
     cout << "Enter Quantity: ";
     cin >> quantity;
 
-    if (quantity < 0)
+    if (!InputValidator::isNonNegativeNumber(quantity))
     {
         cout << "Quantity cannot be negative!" << endl;
         return;
     }
-
     books.push_back(Book(id, title, author, quantity));
 
     cout << "Book added successfully!" << endl;

@@ -1,5 +1,5 @@
 #include "AuthService.h"
-
+#include "InputValidator.h"
 void AuthService::registerUser()
 {
     string username;
@@ -9,6 +9,15 @@ void AuthService::registerUser()
 
     cout << "Enter username: ";
     cin >> username;
+
+    cout << "Enter username: ";
+    cin >> username;
+
+    if (!InputValidator::isNotEmpty(username))
+    {
+        cout << "Username cannot be empty!" << endl;
+        return;
+    }
 
     for (User user : users)
     {
@@ -22,7 +31,7 @@ void AuthService::registerUser()
     cout << "Enter password: ";
     cin >> password;
 
-    if (password.empty())
+    if (!InputValidator::isNotEmpty(password))
     {
         cout << "Password cannot be empty!" << endl;
         return;
@@ -48,7 +57,7 @@ bool AuthService::loginUser()
     cout << "Enter password: ";
     cin >> password;
     cout << "Entered username: " << username << endl;
-cout << "Stored username: " << users[0].username << endl;
+    cout << "Stored username: " << users[0].username << endl;
 
     for (User user : users)
     {

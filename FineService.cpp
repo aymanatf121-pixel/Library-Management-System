@@ -1,4 +1,5 @@
 #include "FineService.h"
+#include "InputValidator.h"
 #include <iostream>
 
 using namespace std;
@@ -12,16 +13,30 @@ void FineService::addFine()
 
     cout << "\n===== Add Fine =====" << endl;
 
+    cout << "\n===== Add Fine =====" << endl;
+
     cout << "Enter Fine ID: ";
     cin >> id;
+
+    if (!InputValidator::isPositiveNumber(id))
+    {
+        cout << "Fine ID must be positive!" << endl;
+        return;
+    }
 
     cout << "Enter Borrowing ID: ";
     cin >> borrowingId;
 
+    if (!InputValidator::isPositiveNumber(borrowingId))
+    {
+        cout << "Borrowing ID must be positive!" << endl;
+        return;
+    }
+
     cout << "Enter Fine Amount: ";
     cin >> amount;
 
-    if (amount < 0)
+    if (!InputValidator::isNonNegativeNumber(amount))
     {
         cout << "Fine amount cannot be negative!" << endl;
         return;
@@ -29,6 +44,8 @@ void FineService::addFine()
 
     cout << "Enter Fine Date: ";
     cin >> fineDate;
+
+
 
     fines.push_back(Fine(id, borrowingId, amount, fineDate, false));
 

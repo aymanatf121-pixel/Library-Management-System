@@ -1,4 +1,5 @@
 #include "BorrowingService.h"
+#include "InputValidator.h"
 #include <iostream>
 
 using namespace std;
@@ -12,14 +13,23 @@ void BorrowingService::borrowBook(BookService &bookService, MemberService &membe
 
     cout << "\n===== Borrow Book =====" << endl;
 
-    cout << "Enter Borrowing ID: ";
-    cin >> id;
-
     cout << "Enter Member ID: ";
     cin >> memberId;
 
+    if (!InputValidator::isPositiveNumber(memberId))
+    {
+        cout << "Member ID must be positive!" << endl;
+        return;
+    }
+
     cout << "Enter Book ID: ";
     cin >> bookId;
+
+    if (!InputValidator::isPositiveNumber(bookId))
+    {
+        cout << "Book ID must be positive!" << endl;
+        return;
+    }
 
     cout << "Enter Borrow Date: ";
     cin >> borrowDate;
