@@ -13,12 +13,27 @@ void BorrowingService::borrowBook(BookService &bookService, MemberService &membe
 
     cout << "\n===== Borrow Book =====" << endl;
 
+    cout << "Enter Borrowing ID: ";
+    cin >> id;
+
+    if (!InputValidator::isPositiveNumber(id))
+    {
+        cout << "Borrowing ID must be positive!" << endl;
+        return;
+    }
+
     cout << "Enter Member ID: ";
     cin >> memberId;
 
     if (!InputValidator::isPositiveNumber(memberId))
     {
         cout << "Member ID must be positive!" << endl;
+        return;
+    }
+
+    if (!memberService.memberExists(memberId))
+    {
+        cout << "Member not found!" << endl;
         return;
     }
 
@@ -31,8 +46,27 @@ void BorrowingService::borrowBook(BookService &bookService, MemberService &membe
         return;
     }
 
+    if (!bookService.bookExists(bookId))
+    {
+        cout << "Book not found!" << endl;
+        return;
+    }
+
+    if (!bookService.decreaseQuantity(bookId))
+    {
+        cout << "Book is not available!" << endl;
+        return;
+    }
+
     cout << "Enter Borrow Date: ";
     cin >> borrowDate;
+
+    if (!InputValidator::isNotEmpty(borrowDate))
+    {
+        cout << "Borrow date cannot be empty!" << endl;
+        bookService.increaseQuantity(bookId);
+        return;
+    }
 
     Borrowing borrowing(id, memberId, bookId, borrowDate, "", "Borrowed");
 
@@ -40,7 +74,6 @@ void BorrowingService::borrowBook(BookService &bookService, MemberService &membe
 
     cout << "Book borrowed successfully!" << endl;
 }
-
 void BorrowingService::viewBorrowings()
 {
     cout << "\n===== Borrowing List =====" << endl;
@@ -65,32 +98,48 @@ void BorrowingService::viewBorrowings()
 
 void BorrowingService::returnBook(BookService &bookService)
 {
-    int id;
-    string returnDate;
+    int borrowingId;
 
     cout << "\n===== Return Book =====" << endl;
-
     cout << "Enter Borrowing ID: ";
-    cin >> id;
+    cin >> borrowingId;
+
+    if (!InputValidator::isPositiveNumber(borrowingId))
+    {
+        cout << "Borrowing ID must be positive!" << endl;
+        return;
+    }
 
     for (Borrowing &borrowing : borrowings)
     {
-        if (borrowing.id == id)
+        if (borrowing.id == borrowingId)
         {
-            cout << "Enter Return Date: ";
-            cin >> returnDate;
+            if (borrowing.status == "Returned")
+            {
+                cout << "Book has already been returned!" << endl;
+                return;
+            }
 
-            borrowing.returnDate = returnDate;
             borrowing.status = "Returned";
+
+            cout << "Enter Return Date: ";
+            cin >> borrowing.returnDate;
+
+            if (!InputValidator::isNotEmpty(borrowing.returnDate))
+            {
+                cout << "Return date cannot be empty!" << endl;
+                return;
+            }
+
+            bookService.increaseQuantity(borrowing.bookId);
 
             cout << "Book returned successfully!" << endl;
             return;
         }
     }
 
-    cout << "Borrowing record not found!" << endl;
+    cout << "Borrowing not found!" << endl;
 }
-
 void BorrowingService::searchBorrowing()
 {
     int id;
