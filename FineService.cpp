@@ -4,48 +4,61 @@
 
 using namespace std;
 
-void FineService::addFine()
+void FineService::addFine(BorrowingService &borrowingService)
 {
-    int id;
-    int borrowingId;
-    double amount;
+    int id = 0;
+    int borrowingId = 0;
+    double amount = 0;
     string fineDate;
 
     cout << "\n===== Add Fine =====" << endl;
 
-    cout << "\n===== Add Fine =====" << endl;
-
     cout << "Enter Fine ID: ";
-    cin >> id;
 
-    if (!InputValidator::isPositiveNumber(id))
+    if (!InputValidator::readPositiveInt(id))
     {
-        cout << "Fine ID must be positive!" << endl;
+        cout << "Invalid Fine ID!" << endl;
         return;
     }
 
-    cout << "Enter Borrowing ID: ";
-    cin >> borrowingId;
-
-    if (!InputValidator::isPositiveNumber(borrowingId))
+    for (Fine fine : fines)
     {
-        cout << "Borrowing ID must be positive!" << endl;
+        if (fine.id == id)
+        {
+            cout << "Fine ID already exists!" << endl;
+            return;
+        }
+    }
+
+    cout << "Enter Borrowing ID: ";
+
+    if (!InputValidator::readPositiveInt(borrowingId))
+    {
+        cout << "Invalid Borrowing ID!" << endl;
+        return;
+    }
+    if (!borrowingService.borrowingExists(borrowingId))
+    {
+        cout << "Borrowing not found!" << endl;
         return;
     }
 
     cout << "Enter Fine Amount: ";
-    cin >> amount;
 
-    if (!InputValidator::isNonNegativeNumber(amount))
+    if (!InputValidator::readNonNegativeDouble(amount))
     {
-        cout << "Fine amount cannot be negative!" << endl;
+        cout << "Invalid Fine Amount!" << endl;
         return;
     }
 
     cout << "Enter Fine Date: ";
     cin >> fineDate;
 
-
+    if (!InputValidator::isNotEmpty(fineDate))
+    {
+        cout << "Fine date cannot be empty!" << endl;
+        return;
+    }
 
     fines.push_back(Fine(id, borrowingId, amount, fineDate, false));
 
@@ -75,11 +88,16 @@ void FineService::viewFines()
 
 void FineService::searchFine()
 {
-    int id;
+    int id = 0;
 
     cout << "\n===== Search Fine =====" << endl;
     cout << "Enter Fine ID: ";
-    cin >> id;
+
+    if (!InputValidator::readPositiveInt(id))
+    {
+        cout << "Invalid Fine ID!" << endl;
+        return;
+    }
 
     for (Fine fine : fines)
     {
@@ -99,27 +117,43 @@ void FineService::searchFine()
 
 void FineService::updateFine()
 {
-    int id;
+    int id = 0;
 
     cout << "\n===== Update Fine =====" << endl;
     cout << "Enter Fine ID: ";
-    cin >> id;
+
+    if (!InputValidator::readPositiveInt(id))
+    {
+        cout << "Invalid Fine ID!" << endl;
+        return;
+    }
 
     for (Fine &fine : fines)
     {
         if (fine.id == id)
         {
-            cout << "Enter new amount: ";
-            cin >> fine.amount;
+            double newAmount;
+            string newDate;
 
-            if (fine.amount < 0)
+            cout << "Enter new amount: ";
+
+            if (!InputValidator::readNonNegativeDouble(newAmount))
             {
-                cout << "Fine amount cannot be negative!" << endl;
+                cout << "Invalid Fine Amount!" << endl;
                 return;
             }
 
             cout << "Enter new date: ";
-            cin >> fine.fineDate;
+            cin >> newDate;
+
+            if (!InputValidator::isNotEmpty(newDate))
+            {
+                cout << "Fine date cannot be empty!" << endl;
+                return;
+            }
+
+            fine.amount = newAmount;
+            fine.fineDate = newDate;
 
             cout << "Fine updated successfully!" << endl;
             return;
@@ -131,11 +165,16 @@ void FineService::updateFine()
 
 void FineService::deleteFine()
 {
-    int id;
+    int id = 0;
 
     cout << "\n===== Delete Fine =====" << endl;
     cout << "Enter Fine ID: ";
-    cin >> id;
+
+    if (!InputValidator::readPositiveInt(id))
+    {
+        cout << "Invalid Fine ID!" << endl;
+        return;
+    }
 
     for (auto it = fines.begin(); it != fines.end(); ++it)
     {
@@ -150,19 +189,48 @@ void FineService::deleteFine()
     cout << "Fine not found!" << endl;
 }
 
-void FineService::payFine()
+void FineService::payFine(AccountingService &accountingService)
 {
-    int id;
+    int id = 0;
 
     cout << "\n===== Pay Fine =====" << endl;
     cout << "Enter Fine ID: ";
-    cin >> id;
+
+    if (!InputValidator::readPositiveInt(id))
+    {
+        cout << "Invalid Fine ID!" << endl;
+        return;
+    }
 
     for (Fine &fine : fines)
     {
         if (fine.id == id)
         {
+            if (fine.paid)
+            {
+                cout << "Fine has already been paid!" << endl;
+                return;
+            }
+
+            string paymentDate;
+
+            cout << "Enter Payment Date: ";
+            cin >> paymentDate;
+
+            if (!InputValidator::isNotEmpty(paymentDate))
+            {
+                cout << "Payment date cannot be empty!" << endl;
+                return;
+            }
+
             fine.paid = true;
+
+            accountingService.addTransaction(
+                fine.id,
+                fine.amount,
+                paymentDate
+            );
+
             cout << "Fine paid successfully!" << endl;
             return;
         }

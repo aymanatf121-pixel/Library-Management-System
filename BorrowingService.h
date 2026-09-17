@@ -18,6 +18,7 @@ public:
     void viewBorrowings();
     void returnBook(BookService &bookService);
     void searchBorrowing();
+    bool borrowingExists(int id);
 };
 
 #endif // BORROWINGSERVICE_H
