@@ -1,5 +1,11 @@
 #include "AuthService.h"
 #include "InputValidator.h"
+#include <functional>
+string hashPassword(string password)
+{
+    hash<string> hasher;
+    return to_string(hasher(password));
+}
 void AuthService::registerUser()
 {
     string username;
@@ -37,7 +43,7 @@ void AuthService::registerUser()
         return;
     }
 
-    users.push_back(User(username, password));
+    users.push_back(User(username, hashPassword(password)));
     cout << "Users count: " << users.size() << endl;
 
     cout << "Registration successful!" << endl;
@@ -61,7 +67,7 @@ bool AuthService::loginUser()
 
     for (User user : users)
     {
-        if (user.username == username && user.password == password)
+        if (user.username == username && user.password == hashPassword(password))
         {
             cout << "Login successful!" << endl;
             return true;
