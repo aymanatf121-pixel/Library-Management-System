@@ -3,13 +3,12 @@
 #include "user.h"
 #include <vector>
 #include <iostream>
-using namespace std;
 
 
 class AuthService
 {
   private:
-      vector<User> users;
+      std::vector<User> users;
   public:
 void registerUser();
     bool loginUser();

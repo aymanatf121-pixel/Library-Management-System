@@ -4,12 +4,11 @@
 #include "Member.h"
 #include <vector>
 
-using namespace std;
 
 class MemberService
 {
 private:
-    vector<Member> members;
+   std:: vector<Member> members;
 
 public:
     void addMember();
@@ -17,6 +16,7 @@ public:
     void searchMember();
     void updateMember();
     void deleteMember();
+    bool memberExists(int id);
 };
 
 #endif // MEMBERSERVICE_H

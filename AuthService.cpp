@@ -1,15 +1,19 @@
 #include "AuthService.h"
 #include "InputValidator.h"
 #include <functional>
-string hashPassword(string password)
+#include <sstream>
+using namespace std;
+std::string hashPassword(std::string password)
 {
-    hash<string> hasher;
-    return to_string(hasher(password));
+    std::hash<std::string> hasher;
+    std::stringstream ss;
+    ss << hasher(password);
+    return ss.str();
 }
 void AuthService::registerUser()
 {
-    string username;
-    string password;
+    std::string username;
+    std::string password;
 
     cout << "\n===== Register =====" << endl;
 
@@ -51,8 +55,8 @@ void AuthService::registerUser()
 
 bool AuthService::loginUser()
 {
-    string username;
-    string password;
+    std::string username;
+    std::string password;
 
     cout << "\n===== Login =====" << endl;
     cout << "Users count: " << users.size() << endl;

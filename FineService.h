@@ -5,12 +5,11 @@
 #include "BorrowingService.h"
 #include <vector>
 
-using namespace std;
 
 class FineService
 {
 private:
-    vector<Fine> fines;
+    std::vector<Fine> fines;
 
 public:
     void addFine(BorrowingService &borrowingService);

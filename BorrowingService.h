@@ -6,12 +6,11 @@
 #include "Member Service.h"
 #include <vector>
 
-using namespace std;
 
 class BorrowingService
 {
 private:
-    vector<Borrowing> borrowings;
+    std::vector<Borrowing> borrowings;
 
 public:
     void borrowBook(BookService &bookService, MemberService &memberService);

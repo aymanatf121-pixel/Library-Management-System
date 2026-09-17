@@ -2,15 +2,19 @@
 #define INPUTVALIDATOR_H
 
 #include <string>
+#include <iostream>
 
-using namespace std;
 
 class InputValidator
 {
 public:
     static bool isPositiveNumber(int value);
     static bool isNonNegativeNumber(double value);
-    static bool isNotEmpty(string value);
+    static bool isNotEmpty(std::string value);
+
+    static bool readPositiveInt(int &value);
+    static bool readNonNegativeInt(int &value);
+    static bool readNonNegativeDouble(double &value);
 };
 
 #endif // INPUTVALIDATOR_H
