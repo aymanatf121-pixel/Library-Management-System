@@ -2,13 +2,12 @@
 #define MEMBERSERVICE_H
 
 #include "Member.h"
-#include <vector>
-
+#include "MemberRepository.h"
 
 class MemberService
 {
 private:
-   std:: vector<Member> members;
+    MemberRepository memberRepository;
 
 public:
     void addMember();
@@ -16,6 +15,7 @@ public:
     void searchMember();
     void updateMember();
     void deleteMember();
+
     bool memberExists(int id);
 };
 
