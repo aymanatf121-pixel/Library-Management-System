@@ -1,6 +1,7 @@
 #include "BorrowingService.h"
 #include "InputValidator.h"
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -21,13 +22,10 @@ void BorrowingService::borrowBook(BookService &bookService, MemberService &membe
         return;
     }
 
-    for (Borrowing borrowing : borrowings)
+    if (borrowingExists(id))
     {
-        if (borrowing.id == id)
-        {
-            cout << "Borrowing ID already exists!" << endl;
-            return;
-        }
+        cout << "Borrowing ID already exists!" << endl;
+        return;
     }
 
     cout << "Enter Member ID: ";
@@ -74,24 +72,31 @@ void BorrowingService::borrowBook(BookService &bookService, MemberService &membe
         return;
     }
 
-    Borrowing borrowing(id, memberId, bookId, borrowDate, "", "Borrowed");
+    Borrowing borrowing(
+        id,
+        memberId,
+        bookId,
+        borrowDate,
+        "",
+        "Borrowed"
+    );
 
-    borrowings.push_back(borrowing);
+    borrowingRepository.addBorrowing(borrowing);
 
     cout << "Book borrowed successfully!" << endl;
 }
 
 void BorrowingService::viewBorrowings()
 {
-    cout << "\n===== Borrowing List =====" << endl;
+    cout << "\n===== Borrowings List =====" << endl;
 
-    if (borrowings.empty())
+    if (borrowingRepository.getAllBorrowings().empty())
     {
-        cout << "No borrowing records available." << endl;
+        cout << "No borrowings available." << endl;
         return;
     }
 
-    for (Borrowing borrowing : borrowings)
+    for (Borrowing borrowing : borrowingRepository.getAllBorrowings())
     {
         cout << "Borrowing ID: " << borrowing.id << endl;
         cout << "Member ID: " << borrowing.memberId << endl;
@@ -105,50 +110,49 @@ void BorrowingService::viewBorrowings()
 
 void BorrowingService::returnBook(BookService &bookService)
 {
-    int borrowingId;
+    int id;
 
     cout << "\n===== Return Book =====" << endl;
 
     cout << "Enter Borrowing ID: ";
 
-    if (!InputValidator::readPositiveInt(borrowingId))
+    if (!InputValidator::readPositiveInt(id))
     {
         cout << "Invalid Borrowing ID!" << endl;
         return;
     }
 
-    for (Borrowing &borrowing : borrowings)
+    Borrowing* borrowing = borrowingRepository.findBorrowing(id);
+
+    if (borrowing == nullptr)
     {
-        if (borrowing.id == borrowingId)
-        {
-            if (borrowing.status == "Returned")
-            {
-                cout << "Book has already been returned!" << endl;
-                return;
-            }
-
-            cout << "Enter Return Date: ";
-
-            string returnDate;
-            cin >> returnDate;
-
-            if (!InputValidator::isNotEmpty(returnDate))
-            {
-                cout << "Return date cannot be empty!" << endl;
-                return;
-            }
-
-            borrowing.returnDate = returnDate;
-            borrowing.status = "Returned";
-
-            bookService.increaseQuantity(borrowing.bookId);
-
-            cout << "Book returned successfully!" << endl;
-            return;
-        }
+        cout << "Borrowing not found!" << endl;
+        return;
     }
 
-    cout << "Borrowing not found!" << endl;
+    if (borrowing->status == "Returned")
+    {
+        cout << "Book has already been returned!" << endl;
+        return;
+    }
+
+    string returnDate;
+
+    cout << "Enter Return Date: ";
+    cin >> returnDate;
+
+    if (!InputValidator::isNotEmpty(returnDate))
+    {
+        cout << "Return date cannot be empty!" << endl;
+        return;
+    }
+
+    borrowing->returnDate = returnDate;
+    borrowing->status = "Returned";
+
+    bookService.increaseQuantity(borrowing->bookId);
+
+    cout << "Book returned successfully!" << endl;
 }
 
 void BorrowingService::searchBorrowing()
@@ -165,31 +169,23 @@ void BorrowingService::searchBorrowing()
         return;
     }
 
-    for (Borrowing borrowing : borrowings)
+    Borrowing* borrowing = borrowingRepository.findBorrowing(id);
+
+    if (borrowing != nullptr)
     {
-        if (borrowing.id == id)
-        {
-            cout << "Borrowing found!" << endl;
-            cout << "Member ID: " << borrowing.memberId << endl;
-            cout << "Book ID: " << borrowing.bookId << endl;
-            cout << "Borrow Date: " << borrowing.borrowDate << endl;
-            cout << "Return Date: " << borrowing.returnDate << endl;
-            cout << "Status: " << borrowing.status << endl;
-            return;
-        }
+        cout << "Borrowing found!" << endl;
+        cout << "Member ID: " << borrowing->memberId << endl;
+        cout << "Book ID: " << borrowing->bookId << endl;
+        cout << "Borrow Date: " << borrowing->borrowDate << endl;
+        cout << "Return Date: " << borrowing->returnDate << endl;
+        cout << "Status: " << borrowing->status << endl;
+        return;
     }
 
-    cout << "Borrowing record not found!" << endl;
+    cout << "Borrowing not found!" << endl;
 }
+
 bool BorrowingService::borrowingExists(int id)
 {
-    for (Borrowing borrowing : borrowings)
-    {
-        if (borrowing.id == id)
-        {
-            return true;
-        }
-    }
-
-    return false;
+    return borrowingRepository.findBorrowing(id) != nullptr;
 }

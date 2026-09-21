@@ -2,21 +2,21 @@
 #define BORROWINGSERVICE_H
 
 #include "Borrowing.h"
+#include "BorrowingRepository.h"
 #include "BookService.h"
 #include "Member Service.h"
-#include <vector>
-
 
 class BorrowingService
 {
 private:
-    std::vector<Borrowing> borrowings;
+    BorrowingRepository borrowingRepository;
 
 public:
     void borrowBook(BookService &bookService, MemberService &memberService);
     void viewBorrowings();
     void returnBook(BookService &bookService);
     void searchBorrowing();
+
     bool borrowingExists(int id);
 };
 
