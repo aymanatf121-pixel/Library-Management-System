@@ -2,12 +2,13 @@
 #define BOOKSERVICE_H
 
 #include "Book.h"
+#include "BookRepository.h"
 #include <vector>
 
 class BookService
 {
 private:
-    std::vector<Book> books;
+    BookRepository BookRepository;
 
 public:
     void addBook();

@@ -15,16 +15,22 @@ void BookService::addBook()
     cout << "\n===== Add Book =====" << endl;
 
     cout << "Enter Book ID: ";
-    cin >> id;
 
-    if (!InputValidator::isPositiveNumber(id))
+    if (!InputValidator::readPositiveInt(id))
     {
-        cout << "Book ID must be positive!" << endl;
+        cout << "Invalid Book ID!" << endl;
+        return;
+    }
+
+    if (bookExists(id))
+    {
+        cout << "Book ID already exists!" << endl;
         return;
     }
 
     cout << "Enter Book Title: ";
-    cin >> title;
+    cin.ignore();
+    getline(cin, title);
 
     if (!InputValidator::isNotEmpty(title))
     {
@@ -33,7 +39,7 @@ void BookService::addBook()
     }
 
     cout << "Enter Author Name: ";
-    cin >> author;
+    getline(cin, author);
 
     if (!InputValidator::isNotEmpty(author))
     {
@@ -42,14 +48,14 @@ void BookService::addBook()
     }
 
     cout << "Enter Quantity: ";
-    cin >> quantity;
 
-    if (!InputValidator::isNonNegativeNumber(quantity))
+    if (!InputValidator::readNonNegativeInt(quantity))
     {
-        cout << "Quantity cannot be negative!" << endl;
+        cout << "Invalid quantity!" << endl;
         return;
     }
-    books.push_back(Book(id, title, author, quantity));
+
+    BookRepository.addBook(Book(id, title, author, quantity));
 
     cout << "Book added successfully!" << endl;
 }
@@ -58,13 +64,13 @@ void BookService::viewBooks()
 {
     cout << "\n===== Books List =====" << endl;
 
-    if (books.empty())
+    if (BookRepository.getAllBooks().empty())
     {
         cout << "No books available." << endl;
         return;
     }
 
-    for (Book book : books)
+    for (Book book : BookRepository.getAllBooks())
     {
         cout << "ID: " << book.id << endl;
         cout << "Title: " << book.title << endl;
@@ -79,19 +85,24 @@ void BookService::searchBook()
     int id;
 
     cout << "\n===== Search Book =====" << endl;
-    cout << "Enter Book ID: ";
-    cin >> id;
 
-    for (Book book : books)
+    cout << "Enter Book ID: ";
+
+    if (!InputValidator::readPositiveInt(id))
     {
-        if (book.id == id)
-        {
-            cout << "Book found!" << endl;
-            cout << "Title: " << book.title << endl;
-            cout << "Author: " << book.author << endl;
-            cout << "Quantity: " << book.quantity << endl;
-            return;
-        }
+        cout << "Invalid Book ID!" << endl;
+        return;
+    }
+
+    Book* book = BookRepository.findBook(id);
+
+    if (book != nullptr)
+    {
+        cout << "Book found!" << endl;
+        cout << "Title: " << book->title << endl;
+        cout << "Author: " << book->author << endl;
+        cout << "Quantity: " << book->quantity << endl;
+        return;
     }
 
     cout << "Book not found!" << endl;
@@ -102,34 +113,59 @@ void BookService::updateBook()
     int id;
 
     cout << "\n===== Update Book =====" << endl;
+
     cout << "Enter Book ID: ";
-    cin >> id;
 
-    for (Book &book : books)
+    if (!InputValidator::readPositiveInt(id))
     {
-        if (book.id == id)
-        {
-            cout << "Enter new title: ";
-            cin >> book.title;
-
-            cout << "Enter new author: ";
-            cin >> book.author;
-
-            cout << "Enter new quantity: ";
-            cin >> book.quantity;
-
-            if (book.quantity < 0)
-            {
-                cout << "Quantity cannot be negative!" << endl;
-                return;
-            }
-
-            cout << "Book updated successfully!" << endl;
-            return;
-        }
+        cout << "Invalid Book ID!" << endl;
+        return;
     }
 
-    cout << "Book not found!" << endl;
+    Book* book = BookRepository.findBook(id);
+
+    if (book == nullptr)
+    {
+        cout << "Book not found!" << endl;
+        return;
+    }
+
+    string newTitle;
+    string newAuthor;
+    int newQuantity;
+
+    cout << "Enter new title: ";
+    cin.ignore();
+    getline(cin, newTitle);
+
+    if (!InputValidator::isNotEmpty(newTitle))
+    {
+        cout << "Book title cannot be empty!" << endl;
+        return;
+    }
+
+    cout << "Enter new author: ";
+    getline(cin, newAuthor);
+
+    if (!InputValidator::isNotEmpty(newAuthor))
+    {
+        cout << "Author name cannot be empty!" << endl;
+        return;
+    }
+
+    cout << "Enter new quantity: ";
+
+    if (!InputValidator::readNonNegativeInt(newQuantity))
+    {
+        cout << "Invalid quantity!" << endl;
+        return;
+    }
+
+    book->title = newTitle;
+    book->author = newAuthor;
+    book->quantity = newQuantity;
+
+    cout << "Book updated successfully!" << endl;
 }
 
 void BookService::deleteBook()
@@ -137,18 +173,51 @@ void BookService::deleteBook()
     int id;
 
     cout << "\n===== Delete Book =====" << endl;
-    cout << "Enter Book ID: ";
-    cin >> id;
 
-    for (auto it = books.begin(); it != books.end(); ++it)
+    cout << "Enter Book ID: ";
+
+    if (!InputValidator::readPositiveInt(id))
     {
-        if (it->id == id)
-        {
-            books.erase(it);
-            cout << "Book deleted successfully!" << endl;
-            return;
-        }
+        cout << "Invalid Book ID!" << endl;
+        return;
+    }
+
+    if (BookRepository.deleteBook(id))
+    {
+        cout << "Book deleted successfully!" << endl;
+        return;
     }
 
     cout << "Book not found!" << endl;
+}
+
+bool BookService::bookExists(int id)
+{
+    return BookRepository.findBook(id) != nullptr;
+}
+
+bool BookService::decreaseQuantity(int id)
+{
+    Book* book = BookRepository.findBook(id);
+
+    if (book != nullptr && book->quantity > 0)
+    {
+        book->quantity--;
+        return true;
+    }
+
+    return false;
+}
+
+bool BookService::increaseQuantity(int id)
+{
+    Book* book = BookRepository.findBook(id);
+
+    if (book != nullptr)
+    {
+        book->quantity++;
+        return true;
+    }
+
+    return false;
 }
