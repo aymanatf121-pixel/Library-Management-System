@@ -63,8 +63,8 @@ void BorrowingService::borrowBook(
     for (Borrowing &borrowing : borrowingRepository.getAllBorrowings())
     {
         if (borrowing.getMemberId() == memberId &&
-            borrowing.getBookId() == bookId &&
-            borrowing.getStatus() == "Borrowed")
+                borrowing.getBookId() == bookId &&
+                borrowing.getStatus() == "Borrowed")
         {
             cout << "This member has already borrowed this book!" << endl;
             return;
@@ -159,6 +159,12 @@ void BorrowingService::returnBook(BookService &bookService)
     if (!InputValidator::isValidDate(returnDate))
     {
         cout << "Invalid return date! Use YYYY-MM-DD format." << endl;
+        return;
+
+    }
+    if (returnDate < borrowing->getBorrowDate())
+    {
+        cout << "Return date cannot be before borrow date!" << endl;
         return;
     }
 
