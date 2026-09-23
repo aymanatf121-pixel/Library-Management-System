@@ -1,11 +1,15 @@
 #include <iostream>
+#include <limits>
 #include "AuthService.h"
 #include "BookService.h"
 #include "Member Service.h"
 #include "BorrowingService.h"
 #include "FineService.h"
+#include "AccountingService.h"
+#include "AnalyticsService.h"
 
 using namespace std;
+
 void memberMenu(MemberService &memberService)
 {
     int choice;
@@ -22,7 +26,14 @@ void memberMenu(MemberService &memberService)
         cout << "6. Back" << endl;
 
         cout << "Enter your choice: ";
-        cin >> choice;
+
+        if (!(cin >> choice))
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input!" << endl;
+            continue;
+        }
 
         if (choice == 1)
         {
@@ -54,7 +65,10 @@ void memberMenu(MemberService &memberService)
         }
     }
 }
-void fineMenu(FineService &fineService)
+
+void fineMenu(FineService &fineService,
+              AccountingService &accountingService,
+              BorrowingService &borrowingService)
 {
     int choice;
 
@@ -71,11 +85,18 @@ void fineMenu(FineService &fineService)
         cout << "7. Back" << endl;
 
         cout << "Enter your choice: ";
-        cin >> choice;
+
+        if (!(cin >> choice))
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input!" << endl;
+            continue;
+        }
 
         if (choice == 1)
         {
-            fineService.addFine();
+            fineService.addFine(borrowingService);
         }
         else if (choice == 2)
         {
@@ -95,7 +116,7 @@ void fineMenu(FineService &fineService)
         }
         else if (choice == 6)
         {
-            fineService.payFine();
+            fineService.payFine(accountingService);
         }
         else if (choice == 7)
         {
@@ -107,10 +128,73 @@ void fineMenu(FineService &fineService)
         }
     }
 }
-void mainMenu(BookService &bookService,
-              MemberService &memberService,
-              BorrowingService &borrowingService,
-              FineService &fineService)
+
+void analyticsMenu(
+    AnalyticsService &analyticsService,
+    BookService &bookService,
+    MemberService &memberService,
+    BorrowingService &borrowingService,
+    AccountingService &accountingService)
+{
+    int choice;
+
+    while (true)
+    {
+        cout << "\n===== Analytics =====" << endl;
+
+        cout << "1. Most Borrowed Books" << endl;
+        cout << "2. Most Active Members" << endl;
+        cout << "3. Monthly Fine Revenue" << endl;
+        cout << "4. Back" << endl;
+
+        cout << "Enter your choice: ";
+
+        if (!(cin >> choice))
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input!" << endl;
+            continue;
+        }
+
+        if (choice == 1)
+        {
+            analyticsService.showMostBorrowedBooks(
+                bookService,
+                borrowingService
+            );
+        }
+        else if (choice == 2)
+        {
+            analyticsService.showMostActiveMembers(
+                memberService,
+                borrowingService
+            );
+        }
+        else if (choice == 3)
+        {
+            analyticsService.showMonthlyFineRevenue(
+                accountingService
+            );
+        }
+        else if (choice == 4)
+        {
+            break;
+        }
+        else
+        {
+            cout << "Invalid choice!" << endl;
+        }
+    }
+}
+
+void mainMenu(
+    BookService &bookService,
+    MemberService &memberService,
+    BorrowingService &borrowingService,
+    FineService &fineService,
+    AccountingService &accountingService,
+    AnalyticsService &analyticsService)
 {
     int choice;
 
@@ -127,9 +211,19 @@ void mainMenu(BookService &bookService,
         cout << "7. Return Book" << endl;
         cout << "8. Manage Members" << endl;
         cout << "9. Manage Fines" << endl;
-        cout << "10. Logout" << endl;
+        cout << "10. Accounting" << endl;
+        cout << "11. Analytics" << endl;
+        cout << "12. Logout" << endl;
+
         cout << "Enter your choice: ";
-        cin >> choice;
+
+        if (!(cin >> choice))
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input!" << endl;
+            continue;
+        }
 
         if (choice == 1)
         {
@@ -153,7 +247,10 @@ void mainMenu(BookService &bookService,
         }
         else if (choice == 6)
         {
-            borrowingService.borrowBook(bookService, memberService);
+            borrowingService.borrowBook(
+                bookService,
+                memberService
+            );
         }
         else if (choice == 7)
         {
@@ -165,9 +262,58 @@ void mainMenu(BookService &bookService,
         }
         else if (choice == 9)
         {
-            fineMenu(fineService);
+            fineMenu(
+                fineService,
+                accountingService,
+                borrowingService
+            );
         }
         else if (choice == 10)
+        {
+            cout << "\n===== Accounting =====" << endl;
+
+            cout << "1. View Transactions" << endl;
+            cout << "2. View Revenue Report" << endl;
+            cout << "3. Back" << endl;
+
+            int accountingChoice;
+
+            if (!(cin >> accountingChoice))
+            {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Invalid input!" << endl;
+                continue;
+            }
+
+            if (accountingChoice == 1)
+            {
+                accountingService.viewTransactions();
+            }
+            else if (accountingChoice == 2)
+            {
+                accountingService.viewRevenueReport();
+            }
+            else if (accountingChoice == 3)
+            {
+                continue;
+            }
+            else
+            {
+                cout << "Invalid choice!" << endl;
+            }
+        }
+        else if (choice == 11)
+        {
+            analyticsMenu(
+                analyticsService,
+                bookService,
+                memberService,
+                borrowingService,
+                accountingService
+            );
+        }
+        else if (choice == 12)
         {
             cout << "Logged out successfully!" << endl;
             break;
@@ -186,18 +332,28 @@ int main()
     MemberService memberService;
     BorrowingService borrowingService;
     FineService fineService;
+    AccountingService accountingService;
+    AnalyticsService analyticsService;
 
     int choice;
 
     while (true)
     {
         cout << "\n===== Welcome =====" << endl;
+
         cout << "1. Register" << endl;
         cout << "2. Login" << endl;
         cout << "3. Exit" << endl;
 
         cout << "Enter your choice: ";
-        cin >> choice;
+
+        if (!(cin >> choice))
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input!" << endl;
+            continue;
+        }
 
         if (choice == 1)
         {
@@ -207,10 +363,14 @@ int main()
         {
             if (auth.loginUser())
             {
-                mainMenu(bookService,
-                         memberService,
-                         borrowingService,
-                         fineService);
+                mainMenu(
+                    bookService,
+                    memberService,
+                    borrowingService,
+                    fineService,
+                    accountingService,
+                    analyticsService
+                );
             }
         }
         else if (choice == 3)

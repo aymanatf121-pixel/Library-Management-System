@@ -54,3 +54,8 @@ void AccountingService::viewRevenueReport()
     cout << "Transaction Count: " << transactions.size() << endl;
     cout << "Total Revenue: " << totalRevenue << endl;
 }
+
+std::vector<Transaction>& AccountingService::getAllTransactions()
+{
+    return transactions;
+}
