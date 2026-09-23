@@ -58,6 +58,19 @@ void BorrowingService::borrowBook(
         return;
     }
 
+    // Prevent the same member from borrowing the same book twice
+    // while the previous borrowing is still active.
+    for (Borrowing &borrowing : borrowingRepository.getAllBorrowings())
+    {
+        if (borrowing.getMemberId() == memberId &&
+            borrowing.getBookId() == bookId &&
+            borrowing.getStatus() == "Borrowed")
+        {
+            cout << "This member has already borrowed this book!" << endl;
+            return;
+        }
+    }
+
     if (!bookService.decreaseQuantity(bookId))
     {
         cout << "Book is not available!" << endl;
