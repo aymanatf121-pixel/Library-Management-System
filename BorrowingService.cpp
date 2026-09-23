@@ -77,12 +77,12 @@ void BorrowingService::borrowBook(
         return;
     }
 
-    cout << "Enter Borrow Date: ";
+    cout << "Enter Borrow Date (YYYY-MM-DD): ";
     cin >> borrowDate;
 
-    if (!InputValidator::isNotEmpty(borrowDate))
+    if (!InputValidator::isValidDate(borrowDate))
     {
-        cout << "Borrow date cannot be empty!" << endl;
+        cout << "Invalid borrow date! Use YYYY-MM-DD format." << endl;
         bookService.increaseQuantity(bookId);
         return;
     }
@@ -153,12 +153,12 @@ void BorrowingService::returnBook(BookService &bookService)
 
     string returnDate;
 
-    cout << "Enter Return Date: ";
+    cout << "Enter Return Date (YYYY-MM-DD): ";
     cin >> returnDate;
 
-    if (!InputValidator::isNotEmpty(returnDate))
+    if (!InputValidator::isValidDate(returnDate))
     {
-        cout << "Return date cannot be empty!" << endl;
+        cout << "Invalid return date! Use YYYY-MM-DD format." << endl;
         return;
     }
 
