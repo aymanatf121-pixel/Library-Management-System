@@ -35,12 +35,12 @@ void FineService::addFine(BorrowingService &borrowingService)
         return;
     }
 
-    cout << "Enter Fine Date: ";
+    cout << "Enter Fine Date (YYYY-MM-DD): ";
     cin >> fineDate;
 
-    if (!InputValidator::isNotEmpty(fineDate))
+    if (!InputValidator::isValidDate(fineDate))
     {
-        cout << "Fine date cannot be empty!" << endl;
+        cout << "Invalid fine date! Use YYYY-MM-DD format." << endl;
         return;
     }
 
@@ -152,12 +152,12 @@ void FineService::updateFine()
         return;
     }
 
-    cout << "Enter new Fine Date: ";
+    cout << "Enter new Fine Date (YYYY-MM-DD): ";
     cin >> newDate;
 
-    if (!InputValidator::isNotEmpty(newDate))
+    if (!InputValidator::isValidDate(newDate))
     {
-        cout << "Fine date cannot be empty!" << endl;
+        cout << "Invalid fine date! Use YYYY-MM-DD format." << endl;
         return;
     }
 
@@ -232,12 +232,12 @@ void FineService::payFine(AccountingService &accountingService)
         return;
     }
 
-    cout << "Enter Payment Date: ";
+    cout << "Enter Payment Date (YYYY-MM-DD): ";
     cin >> paymentDate;
 
-    if (!InputValidator::isNotEmpty(paymentDate))
+    if (!InputValidator::isValidDate(paymentDate))
     {
-        cout << "Payment date cannot be empty!" << endl;
+        cout << "Invalid payment date! Use YYYY-MM-DD format." << endl;
         return;
     }
 
