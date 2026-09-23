@@ -41,9 +41,9 @@ void MemberService::addMember()
     cout << "Enter Email: ";
     cin >> email;
 
-    if (!InputValidator::isNotEmpty(email))
+    if (!InputValidator::isValidEmail(email))
     {
-        cout << "Email cannot be empty!" << endl;
+        cout << "Invalid email format!" << endl;
         return;
     }
 
@@ -84,11 +84,11 @@ void MemberService::viewMembers()
 
     for (Member member : memberRepository.getAllMembers())
     {
-        cout << "ID: " << member.id << endl;
-        cout << "Name: " << member.name << endl;
-        cout << "Email: " << member.email << endl;
-        cout << "Phone: " << member.phone << endl;
-        cout << "Address: " << member.address << endl;
+        cout << "ID: " << member.getId() << endl;
+        cout << "Name: " << member.getName() << endl;
+        cout << "Email: " << member.getEmail() << endl;
+        cout << "Phone: " << member.getPhone() << endl;
+        cout << "Address: " << member.getAddress() << endl;
         cout << "------------------------" << endl;
     }
 }
@@ -112,10 +112,10 @@ void MemberService::searchMember()
     if (member != nullptr)
     {
         cout << "Member found!" << endl;
-        cout << "Name: " << member->name << endl;
-        cout << "Email: " << member->email << endl;
-        cout << "Phone: " << member->phone << endl;
-        cout << "Address: " << member->address << endl;
+        cout << "Name: " << member->getName() << endl;
+        cout << "Email: " << member->getEmail() << endl;
+        cout << "Phone: " << member->getPhone() << endl;
+        cout << "Address: " << member->getAddress() << endl;
         return;
     }
 
@@ -161,9 +161,9 @@ void MemberService::updateMember()
     cout << "Enter new email: ";
     cin >> newEmail;
 
-    if (!InputValidator::isNotEmpty(newEmail))
+    if (!InputValidator::isValidEmail(newEmail))
     {
-        cout << "Email cannot be empty!" << endl;
+        cout << "Invalid email format!" << endl;
         return;
     }
 
@@ -185,10 +185,10 @@ void MemberService::updateMember()
         return;
     }
 
-    member->name = newName;
-    member->email = newEmail;
-    member->phone = newPhone;
-    member->address = newAddress;
+    member->setName(newName);
+    member->setEmail(newEmail);
+    member->setPhone(newPhone);
+    member->setAddress(newAddress);
 
     cout << "Member updated successfully!" << endl;
 }
