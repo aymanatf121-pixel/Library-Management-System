@@ -3,10 +3,9 @@
 
 #include <string>
 
-
 class Borrowing
 {
-public:
+private:
     int id;
     int memberId;
     int bookId;
@@ -14,15 +13,25 @@ public:
     std::string returnDate;
     std::string status;
 
-    Borrowing(int i, int m, int b, std::string bd, std::string rd, std::string s)
-    {
-        id = i;
-        memberId = m;
-        bookId = b;
-        borrowDate = bd;
-        returnDate = rd;
-        status = s;
-    }
+public:
+    Borrowing(
+        int i,
+        int m,
+        int b,
+        std::string bd,
+        std::string rd,
+        std::string s
+    );
+
+    int getId() const;
+    int getMemberId() const;
+    int getBookId() const;
+    std::string getBorrowDate() const;
+    std::string getReturnDate() const;
+    std::string getStatus() const;
+
+    void setReturnDate(std::string rd);
+    void setStatus(std::string s);
 };
 
 #endif // BORROWING_H

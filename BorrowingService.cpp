@@ -5,7 +5,9 @@
 
 using namespace std;
 
-void BorrowingService::borrowBook(BookService &bookService, MemberService &memberService)
+void BorrowingService::borrowBook(
+    BookService &bookService,
+    MemberService &memberService)
 {
     int id;
     int memberId;
@@ -98,12 +100,12 @@ void BorrowingService::viewBorrowings()
 
     for (Borrowing borrowing : borrowingRepository.getAllBorrowings())
     {
-        cout << "Borrowing ID: " << borrowing.id << endl;
-        cout << "Member ID: " << borrowing.memberId << endl;
-        cout << "Book ID: " << borrowing.bookId << endl;
-        cout << "Borrow Date: " << borrowing.borrowDate << endl;
-        cout << "Return Date: " << borrowing.returnDate << endl;
-        cout << "Status: " << borrowing.status << endl;
+        cout << "Borrowing ID: " << borrowing.getId() << endl;
+        cout << "Member ID: " << borrowing.getMemberId() << endl;
+        cout << "Book ID: " << borrowing.getBookId() << endl;
+        cout << "Borrow Date: " << borrowing.getBorrowDate() << endl;
+        cout << "Return Date: " << borrowing.getReturnDate() << endl;
+        cout << "Status: " << borrowing.getStatus() << endl;
         cout << "------------------------" << endl;
     }
 }
@@ -130,7 +132,7 @@ void BorrowingService::returnBook(BookService &bookService)
         return;
     }
 
-    if (borrowing->status == "Returned")
+    if (borrowing->getStatus() == "Returned")
     {
         cout << "Book has already been returned!" << endl;
         return;
@@ -147,10 +149,10 @@ void BorrowingService::returnBook(BookService &bookService)
         return;
     }
 
-    borrowing->returnDate = returnDate;
-    borrowing->status = "Returned";
+    borrowing->setReturnDate(returnDate);
+    borrowing->setStatus("Returned");
 
-    bookService.increaseQuantity(borrowing->bookId);
+    bookService.increaseQuantity(borrowing->getBookId());
 
     cout << "Book returned successfully!" << endl;
 }
@@ -174,11 +176,11 @@ void BorrowingService::searchBorrowing()
     if (borrowing != nullptr)
     {
         cout << "Borrowing found!" << endl;
-        cout << "Member ID: " << borrowing->memberId << endl;
-        cout << "Book ID: " << borrowing->bookId << endl;
-        cout << "Borrow Date: " << borrowing->borrowDate << endl;
-        cout << "Return Date: " << borrowing->returnDate << endl;
-        cout << "Status: " << borrowing->status << endl;
+        cout << "Member ID: " << borrowing->getMemberId() << endl;
+        cout << "Book ID: " << borrowing->getBookId() << endl;
+        cout << "Borrow Date: " << borrowing->getBorrowDate() << endl;
+        cout << "Return Date: " << borrowing->getReturnDate() << endl;
+        cout << "Status: " << borrowing->getStatus() << endl;
         return;
     }
 

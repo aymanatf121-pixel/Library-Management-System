@@ -14,7 +14,7 @@ Borrowing* BorrowingRepository::findBorrowing(int id)
 {
     for (Borrowing &borrowing : borrowings)
     {
-        if (borrowing.id == id)
+        if (borrowing.getId() == id)
         {
             return &borrowing;
         }
@@ -27,7 +27,7 @@ bool BorrowingRepository::deleteBorrowing(int id)
 {
     for (auto it = borrowings.begin(); it != borrowings.end(); ++it)
     {
-        if (it->id == id)
+        if (it->getId() == id)
         {
             borrowings.erase(it);
             return true;
