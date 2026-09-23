@@ -3,24 +3,33 @@
 
 #include <string>
 
-
 class Fine
 {
-public:
+private:
     int id;
     int borrowingId;
     double amount;
     std::string fineDate;
     bool paid;
 
-    Fine(int i, int b, double a, std::string d, bool p)
-    {
-        id = i;
-        borrowingId = b;
-        amount = a;
-        fineDate = d;
-        paid = p;
-    }
+public:
+    Fine(
+        int i,
+        int b,
+        double a,
+        std::string d,
+        bool p
+    );
+
+    int getId() const;
+    int getBorrowingId() const;
+    double getAmount() const;
+    std::string getFineDate() const;
+    bool isPaid() const;
+
+    void setAmount(double a);
+    void setFineDate(std::string d);
+    void setPaid(bool p);
 };
 
 #endif // FINE_H

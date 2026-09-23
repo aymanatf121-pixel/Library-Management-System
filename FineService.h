@@ -2,14 +2,14 @@
 #define FINESERVICE_H
 
 #include "Fine.h"
-#include "FineRepository.h"
 #include "AccountingService.h"
 #include "BorrowingService.h"
+#include <vector>
 
 class FineService
 {
 private:
-    FineRepository fineRepository;
+    std::vector<Fine> fines;
 
 public:
     void addFine(BorrowingService &borrowingService);

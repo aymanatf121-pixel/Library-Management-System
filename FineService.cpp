@@ -7,26 +7,11 @@ using namespace std;
 
 void FineService::addFine(BorrowingService &borrowingService)
 {
-    int id = 0;
-    int borrowingId = 0;
-    double amount = 0;
+    int borrowingId;
+    double amount;
     string fineDate;
 
     cout << "\n===== Add Fine =====" << endl;
-
-    cout << "Enter Fine ID: ";
-
-    if (!InputValidator::readPositiveInt(id))
-    {
-        cout << "Invalid Fine ID!" << endl;
-        return;
-    }
-
-    if (fineRepository.findFine(id) != nullptr)
-    {
-        cout << "Fine ID already exists!" << endl;
-        return;
-    }
 
     cout << "Enter Borrowing ID: ";
 
@@ -59,9 +44,17 @@ void FineService::addFine(BorrowingService &borrowingService)
         return;
     }
 
-    fineRepository.addFine(
-        Fine(id, borrowingId, amount, fineDate, false)
+    int id = fines.size() + 1;
+
+    Fine fine(
+        id,
+        borrowingId,
+        amount,
+        fineDate,
+        false
     );
+
+    fines.push_back(fine);
 
     cout << "Fine added successfully!" << endl;
 }
@@ -70,26 +63,26 @@ void FineService::viewFines()
 {
     cout << "\n===== Fines List =====" << endl;
 
-    if (fineRepository.getAllFines().empty())
+    if (fines.empty())
     {
         cout << "No fines available." << endl;
         return;
     }
 
-    for (Fine fine : fineRepository.getAllFines())
+    for (Fine fine : fines)
     {
-        cout << "Fine ID: " << fine.id << endl;
-        cout << "Borrowing ID: " << fine.borrowingId << endl;
-        cout << "Amount: " << fine.amount << endl;
-        cout << "Fine Date: " << fine.fineDate << endl;
-        cout << "Paid: " << (fine.paid ? "Yes" : "No") << endl;
+        cout << "Fine ID: " << fine.getId() << endl;
+        cout << "Borrowing ID: " << fine.getBorrowingId() << endl;
+        cout << "Amount: " << fine.getAmount() << endl;
+        cout << "Fine Date: " << fine.getFineDate() << endl;
+        cout << "Paid: " << (fine.isPaid() ? "Yes" : "No") << endl;
         cout << "------------------------" << endl;
     }
 }
 
 void FineService::searchFine()
 {
-    int id = 0;
+    int id;
 
     cout << "\n===== Search Fine =====" << endl;
 
@@ -101,16 +94,17 @@ void FineService::searchFine()
         return;
     }
 
-    Fine* fine = fineRepository.findFine(id);
-
-    if (fine != nullptr)
+    for (Fine &fine : fines)
     {
-        cout << "Fine found!" << endl;
-        cout << "Borrowing ID: " << fine->borrowingId << endl;
-        cout << "Amount: " << fine->amount << endl;
-        cout << "Fine Date: " << fine->fineDate << endl;
-        cout << "Paid: " << (fine->paid ? "Yes" : "No") << endl;
-        return;
+        if (fine.getId() == id)
+        {
+            cout << "Fine found!" << endl;
+            cout << "Borrowing ID: " << fine.getBorrowingId() << endl;
+            cout << "Amount: " << fine.getAmount() << endl;
+            cout << "Fine Date: " << fine.getFineDate() << endl;
+            cout << "Paid: " << (fine.isPaid() ? "Yes" : "No") << endl;
+            return;
+        }
     }
 
     cout << "Fine not found!" << endl;
@@ -118,7 +112,7 @@ void FineService::searchFine()
 
 void FineService::updateFine()
 {
-    int id = 0;
+    int id;
 
     cout << "\n===== Update Fine =====" << endl;
 
@@ -130,7 +124,16 @@ void FineService::updateFine()
         return;
     }
 
-    Fine* fine = fineRepository.findFine(id);
+    Fine* fine = nullptr;
+
+    for (Fine &item : fines)
+    {
+        if (item.getId() == id)
+        {
+            fine = &item;
+            break;
+        }
+    }
 
     if (fine == nullptr)
     {
@@ -141,7 +144,7 @@ void FineService::updateFine()
     double newAmount;
     string newDate;
 
-    cout << "Enter new amount: ";
+    cout << "Enter new Fine Amount: ";
 
     if (!InputValidator::readNonNegativeDouble(newAmount))
     {
@@ -149,7 +152,7 @@ void FineService::updateFine()
         return;
     }
 
-    cout << "Enter new date: ";
+    cout << "Enter new Fine Date: ";
     cin >> newDate;
 
     if (!InputValidator::isNotEmpty(newDate))
@@ -158,15 +161,15 @@ void FineService::updateFine()
         return;
     }
 
-    fine->amount = newAmount;
-    fine->fineDate = newDate;
+    fine->setAmount(newAmount);
+    fine->setFineDate(newDate);
 
     cout << "Fine updated successfully!" << endl;
 }
 
 void FineService::deleteFine()
 {
-    int id = 0;
+    int id;
 
     cout << "\n===== Delete Fine =====" << endl;
 
@@ -178,10 +181,14 @@ void FineService::deleteFine()
         return;
     }
 
-    if (fineRepository.deleteFine(id))
+    for (auto it = fines.begin(); it != fines.end(); ++it)
     {
-        cout << "Fine deleted successfully!" << endl;
-        return;
+        if (it->getId() == id)
+        {
+            fines.erase(it);
+            cout << "Fine deleted successfully!" << endl;
+            return;
+        }
     }
 
     cout << "Fine not found!" << endl;
@@ -189,7 +196,8 @@ void FineService::deleteFine()
 
 void FineService::payFine(AccountingService &accountingService)
 {
-    int id = 0;
+    int id;
+    string paymentDate;
 
     cout << "\n===== Pay Fine =====" << endl;
 
@@ -201,7 +209,16 @@ void FineService::payFine(AccountingService &accountingService)
         return;
     }
 
-    Fine* fine = fineRepository.findFine(id);
+    Fine* fine = nullptr;
+
+    for (Fine &item : fines)
+    {
+        if (item.getId() == id)
+        {
+            fine = &item;
+            break;
+        }
+    }
 
     if (fine == nullptr)
     {
@@ -209,13 +226,11 @@ void FineService::payFine(AccountingService &accountingService)
         return;
     }
 
-    if (fine->paid)
+    if (fine->isPaid())
     {
         cout << "Fine has already been paid!" << endl;
         return;
     }
-
-    string paymentDate;
 
     cout << "Enter Payment Date: ";
     cin >> paymentDate;
@@ -226,13 +241,13 @@ void FineService::payFine(AccountingService &accountingService)
         return;
     }
 
-    fine->paid = true;
-
     accountingService.addTransaction(
-        fine->id,
-        fine->amount,
+        fine->getId(),
+        fine->getAmount(),
         paymentDate
     );
+
+    fine->setPaid(true);
 
     cout << "Fine paid successfully!" << endl;
 }

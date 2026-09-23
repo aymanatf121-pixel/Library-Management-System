@@ -14,7 +14,7 @@ Fine* FineRepository::findFine(int id)
 {
     for (Fine &fine : fines)
     {
-        if (fine.id == id)
+        if (fine.getId() == id)
         {
             return &fine;
         }
@@ -27,7 +27,7 @@ bool FineRepository::deleteFine(int id)
 {
     for (auto it = fines.begin(); it != fines.end(); ++it)
     {
-        if (it->id == id)
+        if (it->getId() == id)
         {
             fines.erase(it);
             return true;
