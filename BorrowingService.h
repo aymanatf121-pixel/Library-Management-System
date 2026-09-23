@@ -1,11 +1,12 @@
 #ifndef BORROWINGSERVICE_H
 #define BORROWINGSERVICE_H
 
+#include <vector>
+
 #include "Borrowing.h"
 #include "BorrowingRepository.h"
 #include "BookService.h"
 #include "Member Service.h"
-
 class BorrowingService
 {
 private:
@@ -18,6 +19,7 @@ public:
     void searchBorrowing();
 
     bool borrowingExists(int id);
+    std::vector<Borrowing> getAllBorrowings();
 };
 
 #endif // BORROWINGSERVICE_H

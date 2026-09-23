@@ -210,3 +210,7 @@ bool BorrowingService::borrowingExists(int id)
 {
     return borrowingRepository.findBorrowing(id) != nullptr;
 }
+std::vector<Borrowing> BorrowingService::getAllBorrowings()
+{
+    return borrowingRepository.getAllBorrowings();
+}
