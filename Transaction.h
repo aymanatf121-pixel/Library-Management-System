@@ -3,25 +3,29 @@
 
 #include <string>
 
-using namespace std;
-
 class Transaction
 {
-public:
+private:
     int id;
     int fineId;
     double amount;
-    string date;
-    string type;
+    std::string date;
+    std::string type;
 
-    Transaction(int i, int f, double a, string d, string t)
-    {
-        id = i;
-        fineId = f;
-        amount = a;
-        date = d;
-        type = t;
-    }
+public:
+    Transaction(
+        int i,
+        int f,
+        double a,
+        std::string d,
+        std::string t
+    );
+
+    int getId() const;
+    int getFineId() const;
+    double getAmount() const;
+    std::string getDate() const;
+    std::string getType() const;
 };
 
 #endif // TRANSACTION_H

@@ -7,12 +7,19 @@ void AccountingService::addTransaction(int fineId, double amount, string date)
 {
     int id = transactions.size() + 1;
 
-    Transaction transaction(id, fineId, amount, date, "Fine Payment");
+    Transaction transaction(
+        id,
+        fineId,
+        amount,
+        date,
+        "Fine Payment"
+    );
 
     transactions.push_back(transaction);
 
     cout << "Transaction added successfully!" << endl;
 }
+
 void AccountingService::viewTransactions()
 {
     cout << "\n===== Transactions List =====" << endl;
@@ -25,25 +32,25 @@ void AccountingService::viewTransactions()
 
     for (Transaction transaction : transactions)
     {
-        cout << "Transaction ID: " << transaction.id << endl;
-        cout << "Fine ID: " << transaction.fineId << endl;
-        cout << "Amount: " << transaction.amount << endl;
-        cout << "Date: " << transaction.date << endl;
-        cout << "Type: " << transaction.type << endl;
+        cout << "Transaction ID: " << transaction.getId() << endl;
+        cout << "Fine ID: " << transaction.getFineId() << endl;
+        cout << "Amount: " << transaction.getAmount() << endl;
+        cout << "Date: " << transaction.getDate() << endl;
+        cout << "Type: " << transaction.getType() << endl;
         cout << "------------------------" << endl;
     }
 }
+
 void AccountingService::viewRevenueReport()
 {
     double totalRevenue = 0;
 
     for (Transaction transaction : transactions)
     {
-        totalRevenue += transaction.amount;
+        totalRevenue += transaction.getAmount();
     }
 
     cout << "\n===== Revenue Report =====" << endl;
     cout << "Transaction Count: " << transactions.size() << endl;
     cout << "Total Revenue: " << totalRevenue << endl;
 }
-
