@@ -46,6 +46,52 @@ bool InputValidator::isValidPhone(std::string phone)
     return true;
 }
 
+bool InputValidator::isValidDate(std::string date)
+{
+    if (date.length() != 10)
+    {
+        return false;
+    }
+
+    if (date[4] != '-' || date[7] != '-')
+    {
+        return false;
+    }
+
+    for (int i = 0; i < 10; i++)
+    {
+        if (i == 4 || i == 7)
+        {
+            continue;
+        }
+
+        if (date[i] < '0' || date[i] > '9')
+        {
+            return false;
+        }
+    }
+
+    int month =
+        (date[5] - '0') * 10 +
+        (date[6] - '0');
+
+    int day =
+        (date[8] - '0') * 10 +
+        (date[9] - '0');
+
+    if (month < 1 || month > 12)
+    {
+        return false;
+    }
+
+    if (day < 1 || day > 31)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 bool InputValidator::readPositiveInt(int &value)
 {
     if (!(std::cin >> value))

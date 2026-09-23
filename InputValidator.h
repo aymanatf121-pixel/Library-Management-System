@@ -12,7 +12,7 @@ public:
     static bool isNotEmpty(std::string value);
     static bool isValidEmail(std::string email);
     static bool isValidPhone(std::string phone);
-
+    static bool isValidDate(std::string date);
     static bool readPositiveInt(int &value);
     static bool readNonNegativeInt(int &value);
     static bool readNonNegativeDouble(double &value);
