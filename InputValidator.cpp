@@ -16,6 +16,18 @@ bool InputValidator::isNotEmpty(std::string value)
     return !value.empty();
 }
 
+bool InputValidator::isValidEmail(std::string email)
+{
+    size_t atPosition = email.find('@');
+    size_t dotPosition = email.find('.', atPosition);
+
+    return atPosition != std::string::npos &&
+           dotPosition != std::string::npos &&
+           atPosition > 0 &&
+           dotPosition > atPosition + 1 &&
+           dotPosition < email.length() - 1;
+}
+
 bool InputValidator::readPositiveInt(int &value)
 {
     if (!(std::cin >> value))
