@@ -1,4 +1,5 @@
 #include "InputValidator.h"
+#include <limits>
 
 bool InputValidator::isPositiveNumber(int value)
 {
@@ -20,11 +21,19 @@ bool InputValidator::readPositiveInt(int &value)
     if (!(std::cin >> value))
     {
         std::cin.clear();
-        std::cin.ignore(10000, '\n');
+        std::cin.ignore(
+            std::numeric_limits<std::streamsize>::max(),
+            '\n'
+        );
         return false;
     }
 
-    return isPositiveNumber(value);
+    if (!isPositiveNumber(value))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool InputValidator::readNonNegativeInt(int &value)
@@ -32,11 +41,19 @@ bool InputValidator::readNonNegativeInt(int &value)
     if (!(std::cin >> value))
     {
         std::cin.clear();
-        std::cin.ignore(10000, '\n');
+        std::cin.ignore(
+            std::numeric_limits<std::streamsize>::max(),
+            '\n'
+        );
         return false;
     }
 
-    return isNonNegativeNumber(value);
+    if (value < 0)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool InputValidator::readNonNegativeDouble(double &value)
@@ -44,9 +61,17 @@ bool InputValidator::readNonNegativeDouble(double &value)
     if (!(std::cin >> value))
     {
         std::cin.clear();
-        std::cin.ignore(10000, '\n');
+        std::cin.ignore(
+            std::numeric_limits<std::streamsize>::max(),
+            '\n'
+        );
         return false;
     }
 
-    return isNonNegativeNumber(value);
+    if (!isNonNegativeNumber(value))
+    {
+        return false;
+    }
+
+    return true;
 }
