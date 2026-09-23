@@ -2,23 +2,25 @@
 #include "InputValidator.h"
 #include <functional>
 #include <sstream>
+
 using namespace std;
-std::string hashPassword(std::string password)
+
+string hashPassword(string password)
 {
-    std::hash<std::string> hasher;
-    std::stringstream ss;
+    hash<string> hasher;
+    stringstream ss;
+
     ss << hasher(password);
+
     return ss.str();
 }
+
 void AuthService::registerUser()
 {
-    std::string username;
-    std::string password;
+    string username;
+    string password;
 
     cout << "\n===== Register =====" << endl;
-
-    cout << "Enter username: ";
-    cin >> username;
 
     cout << "Enter username: ";
     cin >> username;
@@ -47,16 +49,18 @@ void AuthService::registerUser()
         return;
     }
 
-    users.push_back(User(username, hashPassword(password)));
-    cout << "Users count: " << users.size() << endl;
+    users.push_back(
+        User(username, hashPassword(password))
+    );
 
+    cout << "Users count: " << users.size() << endl;
     cout << "Registration successful!" << endl;
 }
 
 bool AuthService::loginUser()
 {
-    std::string username;
-    std::string password;
+    string username;
+    string password;
 
     cout << "\n===== Login =====" << endl;
     cout << "Users count: " << users.size() << endl;
@@ -66,12 +70,11 @@ bool AuthService::loginUser()
 
     cout << "Enter password: ";
     cin >> password;
-    cout << "Entered username: " << username << endl;
-    cout << "Stored username: " << users[0].username << endl;
 
     for (User user : users)
     {
-        if (user.username == username && user.password == hashPassword(password))
+        if (user.username == username &&
+            user.password == hashPassword(password))
         {
             cout << "Login successful!" << endl;
             return true;
