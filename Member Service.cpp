@@ -50,9 +50,9 @@ void MemberService::addMember()
     cout << "Enter Phone: ";
     cin >> phone;
 
-    if (!InputValidator::isNotEmpty(phone))
+    if (!InputValidator::isValidPhone(phone))
     {
-        cout << "Phone cannot be empty!" << endl;
+        cout << "Invalid phone number! Phone must contain 11 digits." << endl;
         return;
     }
 
@@ -170,9 +170,9 @@ void MemberService::updateMember()
     cout << "Enter new phone: ";
     cin >> newPhone;
 
-    if (!InputValidator::isNotEmpty(newPhone))
+    if (!InputValidator::isValidPhone(newPhone))
     {
-        cout << "Phone cannot be empty!" << endl;
+        cout << "Invalid phone number! Phone must contain 11 digits." << endl;
         return;
     }
 
