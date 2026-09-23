@@ -11,6 +11,7 @@ public:
     static bool isNonNegativeNumber(double value);
     static bool isNotEmpty(std::string value);
     static bool isValidEmail(std::string email);
+    static bool isValidPhone(std::string phone);
 
     static bool readPositiveInt(int &value);
     static bool readNonNegativeInt(int &value);

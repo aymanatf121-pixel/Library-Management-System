@@ -28,6 +28,24 @@ bool InputValidator::isValidEmail(std::string email)
            dotPosition < email.length() - 1;
 }
 
+bool InputValidator::isValidPhone(std::string phone)
+{
+    if (phone.length() != 11)
+    {
+        return false;
+    }
+
+    for (char digit : phone)
+    {
+        if (digit < '0' || digit > '9')
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 bool InputValidator::readPositiveInt(int &value)
 {
     if (!(std::cin >> value))
@@ -37,6 +55,7 @@ bool InputValidator::readPositiveInt(int &value)
             std::numeric_limits<std::streamsize>::max(),
             '\n'
         );
+
         return false;
     }
 
@@ -57,6 +76,7 @@ bool InputValidator::readNonNegativeInt(int &value)
             std::numeric_limits<std::streamsize>::max(),
             '\n'
         );
+
         return false;
     }
 
@@ -77,6 +97,7 @@ bool InputValidator::readNonNegativeDouble(double &value)
             std::numeric_limits<std::streamsize>::max(),
             '\n'
         );
+
         return false;
     }
 
